@@ -1,27 +1,27 @@
 --- 
 # information
 project: 
-  title: "title"
-  description: "description"
+  title: "SPELL"
+  description: "SPELL CPU"
   picture: docs/empty.png
-  author: "Author"
+  author: "Uri Shaked"
   license: LICENSE
 
 # optional interfaces you want to use: gpio, la1, la2, la3, irq, clk2 & wishbone
-interfaces: ['la1', 'gpio']
+interfaces: ['la1', 'gpio', 'wishbone']
 
 # test within caravel
 caravel_test:
   recipe: "coco_test"
-  directory: "caravel_test"
+  directory: "caravel_spell_test"
   id: 1
-  module_name: "wrapped_project"
-  instance_name: "wrapped_project"
+  module_name: "wrapped_spell"
+  instance_name: "wrapped_spell"
 
 # module test
 module_test:
   recipe: "all" 
-  directory: "project directory"
+  directory: "verispell"
   makefile: "Makefile"
 
 # run the wrapper formal proof
@@ -36,7 +36,10 @@ openlane:
 # source required for various configs and module instantiation
 source:
     - wrapper.v
-    - other source files here
+    - verispell/src/memtypes.v
+    - verispell/src/spell.v
+    - verispell/src/execute.v
+    - verispell/src/mem_dff.v
 
 # gds - check nothing on metal 5, DRC & LVS
 gds:

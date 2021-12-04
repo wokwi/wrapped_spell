@@ -2,6 +2,8 @@ import cocotb
 from cocotb.clock import Clock
 from cocotb.triggers import RisingEdge, FallingEdge, ClockCycles, with_timeout
 
+TEST_RESULT_PASS = 0x1 # Should be in sync with spell_test.c 
+
 @cocotb.test()
 async def test_start(dut):
     clock = Clock(dut.clk, 25, units="ns") # 40M
@@ -25,12 +27,11 @@ async def test_start(dut):
     await ClockCycles(dut.clk, 80)
     dut.RSTB <= 1
 
-    # wait with a timeout for the project to become active
-    await with_timeout(RisingEdge(dut.uut.mprj.wrapped_project.active), 180, 'us')
+    # Wait with a timeout for the project to become active
+    await with_timeout(RisingEdge(dut.uut.mprj.wrapped_spell_1.active), 180, 'us')
 
-    # wait
-    await ClockCycles(dut.clk, 6000)
+    # Wait
+    await ClockCycles(dut.clk, 8000)
 
-    # assert something
-    assert(0 == 25)
-
+    # Check if C program ran succesfully
+    assert(((int(dut.uut.soc.mgmt_out_predata) >> 28) & 0xf) == TEST_RESULT_PASS)

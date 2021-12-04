@@ -1,0 +1,3 @@
+[submodule "verispell"]
+	path = verispell
+	url = https://github.com/wokwi/verispell

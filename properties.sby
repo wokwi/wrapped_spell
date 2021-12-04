@@ -5,10 +5,13 @@ mode prove
 smtbmc
 
 [script]
-read -formal wrapper.v rest of your source files.v
-prep -top wrapped_project
+read -formal wrapper.v memtypes.v spell.v execute.v mem_dff.v
+prep -top wrapped_spell
 
 [files]
 wrapper.v
 properties.v
-rest of your source files.v
+verispell/src/memtypes.v
+verispell/src/spell.v
+verispell/src/execute.v
+verispell/src/mem_dff.v
