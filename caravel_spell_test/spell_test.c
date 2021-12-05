@@ -6,7 +6,7 @@
 #define reg_spell_pc            (*(volatile uint32_t*)0x30000000)
 #define reg_spell_sp            (*(volatile uint32_t*)0x30000004)
 #define reg_spell_exec          (*(volatile uint32_t*)0x30000008)
-#define reg_spell_run           (*(volatile uint32_t*)0x3000000C)
+#define reg_spell_ctrl          (*(volatile uint32_t*)0x3000000C)
 #define reg_spell_cycles_per_ms (*(volatile uint32_t*)0x30000010)
 #define reg_spell_stack_top     (*(volatile uint32_t*)0x30000014)
 #define reg_spell_stack_push    (*(volatile uint32_t*)0x30000018)
@@ -48,10 +48,10 @@ void main() {
     write_progmem(3, 'z');
 
     // Start SPELL
-    reg_spell_run = 1;
+    reg_spell_ctrl = 1;
 
     // Wait for the SPELL to finish
-    while (reg_spell_run & 0x1);
+    while (reg_spell_ctrl & 0x1);
 
     // At this point, we should have 55 at the top of the stack.
     if (reg_spell_stack_top == 55) {
