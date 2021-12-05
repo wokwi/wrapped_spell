@@ -3,7 +3,7 @@
 project: 
   title: "SPELL"
   description: "SPELL CPU"
-  picture: docs/empty.png
+  picture: docs/spell.png
   author: "Uri Shaked"
   license: LICENSE
 
