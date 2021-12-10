@@ -2,7 +2,7 @@
 # information
 project: 
   title: "SPELL"
-  description: "SPELL CPU"
+  description: "SPELL CPU (https://skullctf.com/spell)"
   picture: docs/spell.png
   author: "Uri Shaked"
   license: LICENSE
@@ -39,7 +39,9 @@ source:
     - verispell/src/memtypes.v
     - verispell/src/spell.v
     - verispell/src/execute.v
+    - verispell/src/mem.v
     - verispell/src/mem_dff.v
+    - verispell/src/mem_io.v
 
 # gds - check nothing on metal 5, DRC & LVS
 gds:

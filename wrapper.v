@@ -102,7 +102,8 @@ module wrapped_spell(
     `endif
 
     // permanently set oeb so that outputs are always enabled: 0 is output, 1 is high-impedance
-    assign buf_io_oeb = {`MPRJ_IO_PADS{1'b0}};
+    assign buf_io_oeb[`MPRJ_IO_PADS-1:16] = {`MPRJ_IO_PADS-16{1'b0}};
+    assign buf_io_oeb[7:0] = 8'b00000000;
 
     // Instantiate your module here, 
     // connecting what you need of the above signals. 
@@ -111,13 +112,20 @@ module wrapped_spell(
         .reset(la1_data_in[0]),
         .clock(wb_clk_i),
         .la_data_out(buf_la1_data_out),
+
+        // Wishbone slave
         .i_wb_cyc(wbs_stb_i),
         .i_wb_stb(wbs_stb_i),
         .i_wb_we(wbs_we_i),
         .i_wb_addr(wbs_adr_i),
         .i_wb_data(wbs_dat_i),
         .o_wb_ack(buf_wbs_ack_o),
-        .o_wb_data(buf_wbs_dat_o)
+        .o_wb_data(buf_wbs_dat_o),
+
+        // IO pins
+        .io_in(io_in[15:8]),
+        .io_out(buf_io_out[15:8]),
+        .io_oeb(buf_io_oeb[15:8])
     );
 
 endmodule 
