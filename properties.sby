@@ -5,13 +5,12 @@ mode prove
 smtbmc
 
 [script]
-read -formal wrapper.v memtypes.v spell.v execute.v mem.v mem_dff.v mem_io.v
+read -formal wrapper.v spell.v execute.v mem.v mem_dff.v mem_io.v
 prep -top wrapped_spell
 
 [files]
 wrapper.v
 properties.v
-verispell/src/memtypes.v
 verispell/src/spell.v
 verispell/src/execute.v
 verispell/src/mem.v

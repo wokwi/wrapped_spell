@@ -7,7 +7,6 @@ set ::env(DESIGN_NAME) wrapped_spell
 # add your source files here
 set ::env(VERILOG_FILES) "
     $::env(DESIGN_DIR)/wrapper.v
-    $::env(DESIGN_DIR)/verispell/src/memtypes.v
     $::env(DESIGN_DIR)/verispell/src/execute.v
     $::env(DESIGN_DIR)/verispell/src/mem_dff.v
     $::env(DESIGN_DIR)/verispell/src/mem_io.v
