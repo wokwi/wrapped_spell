@@ -25,6 +25,7 @@ CARAVEL_BEHAVIOURAL_MODELS = $(CARAVEL_VERILOG_PATH)/dv/caravel
 ## User Project Pointers
 UPRJ_VERILOG_PATH ?= ../../../verilog
 UPRJ_RTL_PATH = $(UPRJ_VERILOG_PATH)/rtl
+UPRJ_GL_PATH  = $(UPRJ_VERILOG_PATH)/gl
 UPRJ_BEHAVIOURAL_MODELS = ../
 
 ## RISCV GCC 
@@ -37,7 +38,7 @@ SIM?=RTL
 
 # include the modules that cocotb needs for test
 export COCOTB_REDUCED_LOG_FMT=1
-export PYTHONPATH := $(UPRJ_RTL_PATH)/wrapped_project/project/test
+export PYTHONPATH := $(UPRJ_RTL_PATH)/wrapped_spell/verispell/test
 export LIBPYTHON_LOC=$(shell cocotb-config --libpython)
 
 .SUFFIXES:
@@ -56,7 +57,18 @@ coco_test: ${PATTERN}.hex
 	-I $(CARAVEL_BEHAVIOURAL_MODELS) -I $(CARAVEL_RTL_PATH) \
 	-I $(UPRJ_BEHAVIOURAL_MODELS)    -I $(UPRJ_RTL_PATH)
 	
-	MODULE=test_spell vvp -M $$(cocotb-config --prefix)/cocotb/libs -m libcocotbvpi_icarus sim_build/sim.vvp
+	TESTCASE=test_start MODULE=test_spell vvp -M $$(cocotb-config --prefix)/cocotb/libs -m libcocotbvpi_icarus sim_build/sim.vvp
+	! grep failure results.xml
+
+coco_test_gl: ${PATTERN}.hex
+	rm -rf sim_build/
+	mkdir sim_build/
+	iverilog -o sim_build/sim.vvp -s spell_tb spell_tb.v -DSIM -DFUNCTIONAL \
+	-I $(PDK_PATH) \
+	-I $(CARAVEL_BEHAVIOURAL_MODELS) -I $(CARAVEL_RTL_PATH) \
+	-I $(UPRJ_BEHAVIOURAL_MODELS)    -I $(UPRJ_RTL_PATH) -I $(UPRJ_GL_PATH)
+	
+	TESTCASE=test_start MODULE=test_spell vvp -M $$(cocotb-config --prefix)/cocotb/libs -m libcocotbvpi_icarus sim_build/sim.vvp
 	! grep failure results.xml
 
 %.vvp: %_tb.v %.hex
@@ -94,4 +106,4 @@ test:
 clean:
 	rm -f *.elf *.hex *.bin *.vvp *.vcd *.log
 
-.PHONY: clean hex all
+.PHONY: clean hex 
