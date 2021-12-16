@@ -7,7 +7,6 @@
 `define USE_LA  1
 `define USE_IO  1
 `define USE_SHARED_OPENRAM 1
-`define USE_SHARED_OPENRAM 1
 `define USE_IRQ 1
 
 // update this to the name of your module
