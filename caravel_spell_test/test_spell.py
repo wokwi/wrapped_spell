@@ -1,6 +1,6 @@
 import cocotb
 from cocotb.clock import Clock
-from cocotb.triggers import RisingEdge, FallingEdge, ClockCycles, with_timeout
+from cocotb.triggers import RisingEdge, ClockCycles, with_timeout
 
 TEST_RESULT_PASS = 0x1 # Should be in sync with spell_test.c 
 
