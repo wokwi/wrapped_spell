@@ -25,6 +25,10 @@
 
 #define PACK_SPELL(a, b, c, d) ((a) | (b << 8) | (c << 16) | (d << 24))
 
+#define SPELL_REG_PIN           0x36
+#define SPELL_REG_DDR           0x37
+#define SPELL_REG_PORT          0x38
+
 #define TEST_RESULT_PASS        0x1
 #define TEST_RESULT_FAIL_SRAM1  0xd
 #define TEST_RESULT_FAIL_SRAM2  0xe
@@ -37,8 +41,15 @@ void write_progmem(uint8_t addr, uint8_t opcode) {
 }
 
 void main() {
-	reg_mprj_io_8 =   GPIO_MODE_USER_STD_INPUT_NOPULL;
-	reg_mprj_io_9 =   GPIO_MODE_USER_STD_OUTPUT;
+    // 8 pins for SPELL I/O
+	reg_mprj_io_8  = GPIO_MODE_USER_STD_BIDIRECTIONAL;
+	reg_mprj_io_9  = GPIO_MODE_USER_STD_BIDIRECTIONAL;
+	reg_mprj_io_10 = GPIO_MODE_USER_STD_BIDIRECTIONAL;
+	reg_mprj_io_11 = GPIO_MODE_USER_STD_BIDIRECTIONAL;
+	reg_mprj_io_12 = GPIO_MODE_USER_STD_BIDIRECTIONAL;
+	reg_mprj_io_13 = GPIO_MODE_USER_STD_BIDIRECTIONAL;
+	reg_mprj_io_14 = GPIO_MODE_USER_STD_BIDIRECTIONAL;
+	reg_mprj_io_15 = GPIO_MODE_USER_STD_BIDIRECTIONAL;
 
     /* Apply configuration */
     reg_mprj_xfer = 1;
@@ -87,10 +98,22 @@ void main() {
     OPENRAM(4) = PACK_SPELL(
         11,
         'w',
+        0x55,
+        SPELL_REG_DDR
+    );
+    OPENRAM(8) = PACK_SPELL(
+        'w',
+        0x0f,
+        SPELL_REG_PORT,
+        'w'
+    );
+    OPENRAM(12) = PACK_SPELL(
         'z',
+        0xff,
+        0xff,
         0xff
     );
-    
+
     // Initialize part of the DATA memory
     OPENRAM(DATA_START + 8) = 0; 
 

@@ -31,7 +31,10 @@ async def test_integration(dut):
     await with_timeout(RisingEdge(dut.uut.mprj.wrapped_spell_1.active), 180, 'us')
 
     # Wait
-    await ClockCycles(dut.clk, 10300)
+    await ClockCycles(dut.clk, 10900)
 
     # Check if C program ran succesfully
     assert(((int(dut.uut.soc.mgmt_out_predata) >> 28) & 0xf) == TEST_RESULT_PASS)
+
+    # Verify GPIO status
+    assert(str(dut.spell_io.value) == 'z0z0z1z1') # DDR=0x55, PORT=0x0F

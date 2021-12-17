@@ -29,17 +29,16 @@ module spell_tb;
     end
 
 	reg clk;
-    reg RSTB;
+	reg RSTB;
 	reg power1, power2;
 	reg power3, power4;
 
-    wire gpio;
-    wire [37:0] mprj_io;
+	wire gpio;
+	wire [37:0] mprj_io;
 
-    ///// convenience signals that match what the cocotb test modules are looking for
-
-
-    /////
+	///// convenience signals that match what the cocotb test modules are looking for
+	wire [7:0] spell_io = mprj_io[15:8];
+	/////
 
 
 	wire flash_csb;
