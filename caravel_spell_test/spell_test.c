@@ -21,11 +21,13 @@
 #define SRAM_WRITE_PORT         31
 #define SRAM_BASE_ADDR          0x30FFFC00
 #define OPENRAM(addr)           (*(uint32_t*)(SRAM_BASE_ADDR + (addr & 0x3fc)))
+#define DATA_START              0x100
 
 #define PACK_SPELL(a, b, c, d) ((a) | (b << 8) | (c << 16) | (d << 24))
 
 #define TEST_RESULT_PASS        0x1
-#define TEST_RESULT_FAIL_SRAM   0xe
+#define TEST_RESULT_FAIL_SRAM1  0xd
+#define TEST_RESULT_FAIL_SRAM2  0xe
 #define TEST_RESULT_FAIL_DFF    0xf
 
 void write_progmem(uint8_t addr, uint8_t opcode) {
@@ -80,11 +82,20 @@ void main() {
         90,
         14,
         '-',
-        'z'
+        0xa6
     );
+    OPENRAM(4) = PACK_SPELL(
+        11,
+        'w',
+        'z',
+        0xff
+    );
+    
+    // Initialize part of the DATA memory
+    OPENRAM(DATA_START + 8) = 0; 
 
-    // Note: uncommenting the following line causes test to fail
-    // reg_la0_data = (1 << SRAM_WRITE_PORT) | (1 << PROJECT_ID);
+    // Let SPELL have R/W access to the OpenSRAM
+    reg_la0_data = (1 << SRAM_WRITE_PORT) | (1 << PROJECT_ID);
 
     // Start SPELL
     reg_spell_ctrl = CTRL_RUN | CTRL_SRAM_ENABLE;
@@ -94,7 +105,13 @@ void main() {
 
     // At this point, we should have (90-14) at the top of the stack.
     if (reg_spell_stack_top != 90-14) {
-        reg_mprj_datal = TEST_RESULT_FAIL_SRAM << 28;
+        reg_mprj_datal = TEST_RESULT_FAIL_SRAM1 << 28;
+        return;
+    }
+
+    // Also, project should have written at 0xa6 at data memory address 11 (=8+3)
+    if (OPENRAM(DATA_START + 8) != 0xa6000000) {
+        reg_mprj_datal = TEST_RESULT_FAIL_SRAM2 << 28;
         return;
     }
     

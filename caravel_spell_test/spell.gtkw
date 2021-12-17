@@ -1,15 +1,15 @@
 [*]
 [*] GTKWave Analyzer v3.3.103 (w)1999-2019 BSI
-[*] Fri Dec 17 22:09:56 2021
+[*] Fri Dec 17 22:26:30 2021
 [*]
 [dumpfile] "/home/uri/openmpw/caravel_user_project/verilog/dv/caravel_spell_test/spell.vcd"
-[dumpfile_mtime] "Fri Dec 17 22:01:54 2021"
-[dumpfile_size] 368377980
+[dumpfile_mtime] "Fri Dec 17 22:16:53 2021"
+[dumpfile_size] 366572010
 [savefile] "/mnt/c/p/wrapped_spell/caravel_spell_test/spell.gtkw"
 [timestart] 0
 [size] 1908 999
 [pos] -1 -1
-*-25.754894 353600000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-25.817801 343728900 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] spell_tb.
 [treeopen] spell_tb.uut.
 [treeopen] spell_tb.uut.mprj.
@@ -31,7 +31,7 @@ spell_tb.uut.mprj.wrapped_spell_1.spell.sp[4:0]
 spell_tb.uut.mprj.wrapped_spell_1.spell.stack_top[7:0]
 spell_tb.uut.mprj.wrapped_spell_1.spell.pc[7:0]
 spell_tb.uut.mprj.wrapped_spell_1.spell.opcode[7:0]
-@821
+@820
 spell_tb.uut.mprj.wrapped_spell_1.spell.opcode[7:0]
 @1000200
 -SPELL
@@ -58,5 +58,22 @@ spell_tb.uut.mprj.wrapped_spell_1.spell.mem.data_out[7:0]
 spell_tb.uut.soc.mgmt_out_predata[37:0]
 @1000200
 -Test Result
+@200
+-
+@c00201
+-OpenRAM
+@28
+spell_tb.uut.mprj.openram_1kB.csb0
+spell_tb.uut.mprj.openram_1kB.web0
+@22
+spell_tb.uut.mprj.openram_1kB.addr0[7:0]
+spell_tb.uut.mprj.openram_1kB.dout0[31:0]
+@28
+spell_tb.uut.mprj.openram_1kB.csb1
+@22
+spell_tb.uut.mprj.openram_1kB.addr1[7:0]
+spell_tb.uut.mprj.openram_1kB.dout1[31:0]
+@1401201
+-OpenRAM
 [pattern_trace] 1
 [pattern_trace] 0

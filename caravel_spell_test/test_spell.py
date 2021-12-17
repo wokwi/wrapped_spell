@@ -31,7 +31,7 @@ async def test_integration(dut):
     await with_timeout(RisingEdge(dut.uut.mprj.wrapped_spell_1.active), 180, 'us')
 
     # Wait
-    await ClockCycles(dut.clk, 9200)
+    await ClockCycles(dut.clk, 10300)
 
     # Check if C program ran succesfully
     assert(((int(dut.uut.soc.mgmt_out_predata) >> 28) & 0xf) == TEST_RESULT_PASS)
