@@ -49,6 +49,9 @@ all:  coco_test
 
 hex:  ${PATTERN:=.hex}
 
+show:
+	gtkwave $(CARAVEL_ROOT)/../verilog/dv/caravel_spell_test/spell.vcd spell.gtkw
+
 coco_test: ${PATTERN}.hex
 	rm -rf sim_build/
 	mkdir sim_build/
