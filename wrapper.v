@@ -16,7 +16,7 @@ module wrapped_spell(
     inout vssd1,	// User area 1 digital ground
 `endif
     input wire wb_clk_i,            // clock, runs at system clock
- // wishbone interface
+ // caravel wishbone peripheral
 `ifdef USE_WB
     input wire wb_rst_i,            // main system reset
     input wire wbs_stb_i,           // wishbone write strobe
@@ -38,7 +38,7 @@ module wrapped_spell(
     output wire         rambus_wb_we_o,             // write enable
     output wire [3:0]   rambus_wb_sel_o,            // write word select
     output wire [31:0]  rambus_wb_dat_o,            // ram data out
-    output wire [7:0]   rambus_wb_adr_o,            // 8bit address
+    output wire [9:0]   rambus_wb_adr_o,            // 10bit address
     input  wire         rambus_wb_ack_i,            // ack
     input  wire [31:0]  rambus_wb_dat_i,            // ram data in
 `endif
@@ -86,7 +86,7 @@ module wrapped_spell(
     wire buf_rambus_wb_we_o;
     wire [3:0] buf_rambus_wb_sel_o;
     wire [31:0] buf_rambus_wb_dat_o;
-    wire [7:0] buf_rambus_wb_adr_o;
+    wire [9:0] buf_rambus_wb_adr_o;
 
     `ifdef FORMAL
     // formal can't deal with z, so set all outputs to 0 if not active
@@ -102,7 +102,7 @@ module wrapped_spell(
     assign rambus_wb_we_o  = active ? buf_rambus_wb_we_o  : 4'b0;
     assign rambus_wb_sel_o = active ? buf_rambus_wb_sel_o : 1'b0;
     assign rambus_wb_dat_o = active ? buf_rambus_wb_dat_o : 32'b0;
-    assign rambus_wb_adr_o = active ? buf_rambus_wb_adr_o : 8'b0;
+    assign rambus_wb_adr_o = active ? buf_rambus_wb_adr_o : 10'b0;
     `endif
     `ifdef USE_LA
     assign la1_data_out = active ? buf_la1_data_out  : 32'b0;
@@ -130,7 +130,7 @@ module wrapped_spell(
     assign rambus_wb_we_o  = active ? buf_rambus_wb_we_o  : 4'bz;
     assign rambus_wb_sel_o = active ? buf_rambus_wb_sel_o : 1'bz;
     assign rambus_wb_dat_o = active ? buf_rambus_wb_dat_o : 32'bz;
-    assign rambus_wb_adr_o = active ? buf_rambus_wb_adr_o : 8'bz;
+    assign rambus_wb_adr_o = active ? buf_rambus_wb_adr_o : 10'bz;
     `endif
     `ifdef USE_LA
     assign la1_data_out  = active ? buf_la1_data_out  : 32'bz;

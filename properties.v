@@ -38,7 +38,7 @@ always @(*) begin
         _rambus_wb_we_o_z  : assert(rambus_wb_we_o  == 1'b0);
         _rambus_wb_sel_o_z : assert(rambus_wb_sel_o == 4'b0);
         _rambus_wb_dat_o_z : assert(rambus_wb_dat_o == 32'b0);
-        _rambus_wb_adr_o_z : assert(rambus_wb_adr_o == 8'b0);
+        _rambus_wb_adr_o_z : assert(rambus_wb_adr_o == 10'b0);
     `endif
     `ifdef USE_LA
         _la1_data_z_  : assert(la1_data_out == 32'b0);
