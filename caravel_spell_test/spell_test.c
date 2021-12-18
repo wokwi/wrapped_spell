@@ -13,10 +13,13 @@
 #define reg_spell_cycles_per_ms (*(volatile uint32_t*)0x30000010)
 #define reg_spell_stack_top     (*(volatile uint32_t*)0x30000014)
 #define reg_spell_stack_push    (*(volatile uint32_t*)0x30000018)
+#define reg_spell_stack_push    (*(volatile uint32_t*)0x30000018)
+#define reg_spell_int_enable    (*(volatile uint32_t*)0x30000020)
+#define reg_spell_int           (*(volatile uint32_t*)0x30000024)
 
-#define CTRL_RUN (1 << 0)
-#define CTRL_STEP (1 << 1)
-#define CTRL_SRAM_ENABLE (1 << 2)
+#define CTRL_RUN                (1 << 0)
+#define CTRL_STEP               (1 << 1)
+#define CTRL_SRAM_ENABLE        (1 << 2)
 
 #define SRAM_WRITE_PORT         31
 #define SRAM_BASE_ADDR          0x30FFFC00
@@ -29,10 +32,21 @@
 #define SPELL_REG_DDR           0x37
 #define SPELL_REG_PORT          0x38
 
+#define SPELL_INTR_SLEEP        (1 << 0)
+#define SPELL_INTR_STOP         (1 << 1)
+
 #define TEST_RESULT_PASS        0x1
+#define TEST_RESULT_FAIL_IRQ    0xc
 #define TEST_RESULT_FAIL_SRAM1  0xd
 #define TEST_RESULT_FAIL_SRAM2  0xe
 #define TEST_RESULT_FAIL_DFF    0xf
+
+volatile int irq_count;
+
+uint32_t *irq() {
+    reg_spell_int = SPELL_INTR_STOP;  // clear the interrupt flag
+    irq_count++;
+}
 
 void write_progmem(uint8_t addr, uint8_t opcode) {
     reg_spell_stack_push = opcode;
@@ -65,7 +79,7 @@ void main() {
     reg_la1_oenb = 0;
     reg_la1_data |= 1;
     reg_la1_data &= ~1;
-
+/*
     // Write a quick test program to SPELL's CODE memory
     write_progmem(0, 30);
     write_progmem(1, 25);
@@ -135,6 +149,25 @@ void main() {
     // Also, project should have written at 0xa6 at data memory address 11 (=8+3)
     if (OPENRAM(DATA_START + 8) != 0xa6000000) {
         reg_mprj_datal = TEST_RESULT_FAIL_SRAM2 << 28;
+        return;
+    }
+
+*/
+    // Test interrupts
+    reg_mprj_irq = 0b001; // Enable user IRQ 0
+    reg_spell_int = 0xff; // Clear any existing interrupt state
+    reg_spell_int_enable = SPELL_INTR_STOP;
+    irq_count = 0;
+    reg_spell_exec = 'z'; // should not generate an IRQ
+    if (irq_count != 0) {
+        reg_mprj_datal = TEST_RESULT_FAIL_IRQ << 28;
+        return;
+    }
+
+    reg_spell_exec = 0xff; // should generate an IRQ
+    reg_spell_exec = 0xff; // should generate another IRQ
+    if (irq_count != 2) {
+        reg_mprj_datal = TEST_RESULT_FAIL_IRQ << 28;
         return;
     }
     
