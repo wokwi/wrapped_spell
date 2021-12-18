@@ -13,10 +13,14 @@
 #define reg_spell_cycles_per_ms (*(volatile uint32_t*)0x30000010)
 #define reg_spell_stack_top     (*(volatile uint32_t*)0x30000014)
 #define reg_spell_stack_push    (*(volatile uint32_t*)0x30000018)
+#define reg_spell_stack_push    (*(volatile uint32_t*)0x30000018)
+#define reg_spell_int_enable    (*(volatile uint32_t*)0x30000020)
+#define reg_spell_int           (*(volatile uint32_t*)0x30000024)
 
-#define CTRL_RUN (1 << 0)
-#define CTRL_STEP (1 << 1)
-#define CTRL_SRAM_ENABLE (1 << 2)
+#define CTRL_RUN                (1 << 0)
+#define CTRL_STEP               (1 << 1)
+#define CTRL_SRAM_ENABLE        (1 << 2)
+#define CTRL_EDGE_INTERRUPTS    (1 << 3)
 
 #define SRAM_WRITE_PORT         31
 #define SRAM_BASE_ADDR          0x30FFFC00
@@ -29,10 +33,21 @@
 #define SPELL_REG_DDR           0x37
 #define SPELL_REG_PORT          0x38
 
+#define SPELL_INTR_SLEEP        (1 << 0)
+#define SPELL_INTR_STOP         (1 << 1)
+
 #define TEST_RESULT_PASS        0x1
+#define TEST_RESULT_FAIL_IRQ    0xc
 #define TEST_RESULT_FAIL_SRAM1  0xd
 #define TEST_RESULT_FAIL_SRAM2  0xe
 #define TEST_RESULT_FAIL_DFF    0xf
+
+volatile int irq_count;
+
+void irq() {
+    reg_spell_int = SPELL_INTR_STOP;  // clear the interrupt flag
+    irq_count++;
+}
 
 void write_progmem(uint8_t addr, uint8_t opcode) {
     reg_spell_stack_push = opcode;
@@ -81,6 +96,26 @@ void main() {
     // At this point, we should have 55 at the top of the stack.
     if (reg_spell_stack_top != 55) {
         reg_mprj_datal = TEST_RESULT_FAIL_DFF << 28;
+        return;
+    }
+
+    // Test interrupts
+    reg_mprj_irq = 0b001; // Enable user IRQ 0
+    reg_spell_ctrl = CTRL_EDGE_INTERRUPTS;
+    reg_spell_int = 0xff; // Clear any existing interrupt state
+    reg_spell_int_enable = SPELL_INTR_STOP;
+    irq_count = 0;
+    reg_spell_exec = 'z'; // should not generate an IRQ
+    if (irq_count != 0) {
+        reg_mprj_datal = TEST_RESULT_FAIL_IRQ << 28;
+        return;
+    }
+
+    reg_spell_exec = 0xff; // should generate an IRQ
+    reg_spell_exec = 0xff; // should generate another IRQ
+    asm("nop"); // Consumes the IRQ
+    if (irq_count != 2) {
+        reg_mprj_datal = TEST_RESULT_FAIL_IRQ << 28;
         return;
     }
 
@@ -137,7 +172,6 @@ void main() {
         reg_mprj_datal = TEST_RESULT_FAIL_SRAM2 << 28;
         return;
     }
-    
+
     reg_mprj_datal = TEST_RESULT_PASS << 28;
 }
-

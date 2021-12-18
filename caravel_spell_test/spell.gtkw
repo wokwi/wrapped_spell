@@ -1,22 +1,26 @@
 [*]
 [*] GTKWave Analyzer v3.3.103 (w)1999-2019 BSI
-[*] Fri Dec 17 22:26:30 2021
+[*] Sat Dec 18 13:20:31 2021
 [*]
 [dumpfile] "/home/uri/openmpw/caravel_user_project/verilog/dv/caravel_spell_test/spell.vcd"
-[dumpfile_mtime] "Fri Dec 17 22:16:53 2021"
-[dumpfile_size] 366572010
+[dumpfile_mtime] "Sat Dec 18 13:20:31 2021"
+[dumpfile_size] 46661632
 [savefile] "/mnt/c/p/wrapped_spell/caravel_spell_test/spell.gtkw"
 [timestart] 0
 [size] 1908 999
 [pos] -1 -1
-*-25.817801 343728900 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-25.961708 312909000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] spell_tb.
 [treeopen] spell_tb.uut.
 [treeopen] spell_tb.uut.mprj.
 [treeopen] spell_tb.uut.mprj.wrapped_spell_1.
 [treeopen] spell_tb.uut.mprj.wrapped_spell_1.spell.
+[treeopen] spell_tb.uut.soc.
+[treeopen] spell_tb.uut.soc.soc.
+[treeopen] spell_tb.uut.soc.soc.cpu.
+[treeopen] spell_tb.uut.soc.soc.cpu.picorv32_core.
 [sst_width] 214
-[signals_width] 206
+[signals_width] 289
 [sst_expanded] 1
 [sst_vpaned_height] 292
 @800200
@@ -60,7 +64,7 @@ spell_tb.uut.soc.mgmt_out_predata[37:0]
 -Test Result
 @200
 -
-@c00201
+@c00200
 -OpenRAM
 @28
 spell_tb.uut.mprj.openram_1kB.csb0
@@ -73,7 +77,49 @@ spell_tb.uut.mprj.openram_1kB.csb1
 @22
 spell_tb.uut.mprj.openram_1kB.addr1[7:0]
 spell_tb.uut.mprj.openram_1kB.dout1[31:0]
-@1401201
+@1401200
 -OpenRAM
+@200
+-
+@c00200
+-Wishbone
+@28
+spell_tb.uut.mprj.wb_clk_i
+spell_tb.uut.mprj.wb_rst_i
+spell_tb.uut.mprj.wbs_cyc_i
+spell_tb.uut.mprj.wbs_stb_i
+spell_tb.uut.mprj.wbs_ack_o
+spell_tb.uut.mprj.wbs_we_i
+@22
+spell_tb.uut.mprj.wbs_adr_i[31:0]
+spell_tb.uut.mprj.wbs_dat_i[31:0]
+spell_tb.uut.mprj.wbs_dat_o[31:0]
+spell_tb.uut.mprj.wbs_sel_i[3:0]
+@1401200
+-Wishbone
+@200
+-
+@c00200
+-Interrupts
+@28
+spell_tb.uut.mprj.wrapped_spell_1.spell.intr[1:0]
+spell_tb.uut.mprj.wrapped_spell_1.spell.intr_enable[1:0]
+spell_tb.uut.mprj.wrapped_spell_1.spell.interrupt
+spell_tb.uut.mprj.user_irq[2:0]
+@1401200
+-Interrupts
+@200
+-
+@c00201
+-RISC-V Core
+@22
+spell_tb.uut.soc.soc.cpu.picorv32_core.dbg_insn_addr[31:0]
+@820
+spell_tb.uut.soc.soc.cpu.picorv32_core.dbg_ascii_instr[63:0]
+spell_tb.uut.soc.soc.cpu.picorv32_core.dbg_ascii_state[127:0]
+@28
+spell_tb.uut.soc.soc.cpu.picorv32_core.irq[31:0]
+@1401201
+-RISC-V Core
 [pattern_trace] 1
 [pattern_trace] 0

@@ -1,6 +1,6 @@
 import cocotb
 from cocotb.clock import Clock
-from cocotb.triggers import RisingEdge, ClockCycles, with_timeout
+from cocotb.triggers import Edge, First, RisingEdge, ClockCycles, with_timeout
 
 TEST_RESULT_PASS = 0x1 # Should be in sync with spell_test.c 
 
@@ -30,11 +30,11 @@ async def test_integration(dut):
     # Wait with a timeout for the project to become active
     await with_timeout(RisingEdge(dut.uut.mprj.wrapped_spell_1.active), 180, 'us')
 
-    # Wait
-    await ClockCycles(dut.clk, 10900)
+    # Wait for C test code to finish running
+    await First(Edge(dut.c_test_result), ClockCycles(dut.clk, 26000))
 
     # Check if C program ran succesfully
-    assert(((int(dut.uut.soc.mgmt_out_predata) >> 28) & 0xf) == TEST_RESULT_PASS)
+    assert int(dut.c_test_result) == TEST_RESULT_PASS
 
     # Verify GPIO status
-    assert(str(dut.spell_io.value) == 'z0z0z1z1') # DDR=0x55, PORT=0x0F
+    assert str(dut.spell_io.value) == 'z0z0z1z1' # DDR=0x55, PORT=0x0F

@@ -37,6 +37,7 @@ module spell_tb;
 	wire [37:0] mprj_io;
 
 	///// convenience signals that match what the cocotb test modules are looking for
+	wire [3:0] c_test_result = uut.soc.mgmt_out_predata[31:28];
 	wire [7:0] spell_io = mprj_io[15:8];
 	/////
 
