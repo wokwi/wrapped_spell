@@ -101,6 +101,9 @@ test:
 	# to fix flash base address
 	sed -i 's/@10000000/@00000000/g' $@
 
+%.lst: %.elf
+	${GCC_PATH}/${GCC_PREFIX}-objdump -S $< > $@
+
 %.bin: %.elf
 	${GCC_PATH}/${GCC_PREFIX}-objcopy -O binary $< /dev/stdout | tail -c +1048577 > $@
 
