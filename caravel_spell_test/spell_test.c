@@ -20,6 +20,7 @@
 #define CTRL_RUN                (1 << 0)
 #define CTRL_STEP               (1 << 1)
 #define CTRL_SRAM_ENABLE        (1 << 2)
+#define CTRL_EDGE_INTERRUPTS    (1 << 3)
 
 #define SRAM_WRITE_PORT         31
 #define SRAM_BASE_ADDR          0x30FFFC00
@@ -43,7 +44,7 @@
 
 volatile int irq_count;
 
-uint32_t *irq() {
+void irq() {
     reg_spell_int = SPELL_INTR_STOP;  // clear the interrupt flag
     irq_count++;
 }
@@ -79,7 +80,7 @@ void main() {
     reg_la1_oenb = 0;
     reg_la1_data |= 1;
     reg_la1_data &= ~1;
-/*
+
     // Write a quick test program to SPELL's CODE memory
     write_progmem(0, 30);
     write_progmem(1, 25);
@@ -95,6 +96,26 @@ void main() {
     // At this point, we should have 55 at the top of the stack.
     if (reg_spell_stack_top != 55) {
         reg_mprj_datal = TEST_RESULT_FAIL_DFF << 28;
+        return;
+    }
+
+    // Test interrupts
+    reg_mprj_irq = 0b001; // Enable user IRQ 0
+    reg_spell_ctrl = CTRL_EDGE_INTERRUPTS;
+    reg_spell_int = 0xff; // Clear any existing interrupt state
+    reg_spell_int_enable = SPELL_INTR_STOP;
+    irq_count = 0;
+    reg_spell_exec = 'z'; // should not generate an IRQ
+    if (irq_count != 0) {
+        reg_mprj_datal = TEST_RESULT_FAIL_IRQ << 28;
+        return;
+    }
+
+    reg_spell_exec = 0xff; // should generate an IRQ
+    reg_spell_exec = 0xff; // should generate another IRQ
+    asm("nop"); // Consumes the IRQ
+    if (irq_count != 2) {
+        reg_mprj_datal = TEST_RESULT_FAIL_IRQ << 28;
         return;
     }
 
@@ -152,25 +173,5 @@ void main() {
         return;
     }
 
-*/
-    // Test interrupts
-    reg_mprj_irq = 0b001; // Enable user IRQ 0
-    reg_spell_int = 0xff; // Clear any existing interrupt state
-    reg_spell_int_enable = SPELL_INTR_STOP;
-    irq_count = 0;
-    reg_spell_exec = 'z'; // should not generate an IRQ
-    if (irq_count != 0) {
-        reg_mprj_datal = TEST_RESULT_FAIL_IRQ << 28;
-        return;
-    }
-
-    reg_spell_exec = 0xff; // should generate an IRQ
-    reg_spell_exec = 0xff; // should generate another IRQ
-    if (irq_count != 2) {
-        reg_mprj_datal = TEST_RESULT_FAIL_IRQ << 28;
-        return;
-    }
-    
     reg_mprj_datal = TEST_RESULT_PASS << 28;
 }
-
