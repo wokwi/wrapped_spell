@@ -13,7 +13,6 @@
 #define reg_spell_cycles_per_ms (*(volatile uint32_t*)0x30000010)
 #define reg_spell_stack_top     (*(volatile uint32_t*)0x30000014)
 #define reg_spell_stack_push    (*(volatile uint32_t*)0x30000018)
-#define reg_spell_stack_push    (*(volatile uint32_t*)0x30000018)
 #define reg_spell_int_enable    (*(volatile uint32_t*)0x30000020)
 #define reg_spell_int           (*(volatile uint32_t*)0x30000024)
 
