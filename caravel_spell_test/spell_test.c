@@ -35,7 +35,16 @@
 #define SPELL_INTR_SLEEP        (1 << 0)
 #define SPELL_INTR_STOP         (1 << 1)
 
+#define LA_WB_DISABLE           (1 << 1)
+#define LA_WRITE                (1 << 2)
+#define LA_ADDR_SHIFT           (8)
+#define LA_DATA_SHIFT           (16)
+
+#define LA_REG_PC               (((uint32_t)&reg_spell_pc) & 0xff)
+#define LA_REG_SP               (((uint32_t)&reg_spell_sp) & 0xff)
+
 #define TEST_RESULT_PASS        0x1
+#define TEST_RESULT_FAIL_LA     0xb
 #define TEST_RESULT_FAIL_IRQ    0xc
 #define TEST_RESULT_FAIL_SRAM1  0xd
 #define TEST_RESULT_FAIL_SRAM2  0xe
@@ -169,6 +178,14 @@ void main() {
     // Also, project should have written at 0xa6 at data memory address 11 (=8+3)
     if (OPENRAM(DATA_START + 8) != 0xa6000000) {
         reg_mprj_datal = TEST_RESULT_FAIL_SRAM2 << 28;
+        return;
+    }
+
+    /* Test Logic Analyzer interface */
+    reg_la1_data = LA_WRITE | (LA_REG_PC << LA_ADDR_SHIFT) | (0x11 << LA_DATA_SHIFT);
+    reg_la1_data = LA_WRITE | (LA_REG_SP << LA_ADDR_SHIFT) | (0x14 << LA_DATA_SHIFT);
+    if (reg_spell_pc != 0x11 || reg_spell_sp != 0x14) {
+        reg_mprj_datal = TEST_RESULT_FAIL_LA << 28;
         return;
     }
 

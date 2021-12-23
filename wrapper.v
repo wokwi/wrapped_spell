@@ -154,6 +154,12 @@ module wrapped_spell(
     spell spell(
         .reset(la1_data_in[0]),
         .clock(wb_clk_i),
+
+        // Logic analyzer
+        .i_la_wb_disable(la1_data_in[1]),
+        .i_la_write(la1_data_in[2]),
+        .i_la_addr(la1_data_in[14:8]),
+        .i_la_data(la1_data_in[23:16]),
         .la_data_out(buf_la1_data_out),
 
         // Wishbone slave
