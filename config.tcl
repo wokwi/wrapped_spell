@@ -20,8 +20,8 @@ set ::env(PL_TARGET_DENSITY) 0.4
 # don't put clock buffers on the outputs, need tristates to be the final cells
 set ::env(PL_RESIZER_BUFFER_OUTPUT_PORTS) 0
 
-# set absolute size of the die to 430 x 430 um
-set ::env(DIE_AREA) "0 0 430 430"
+# set absolute size of the die to 440 x 440 um
+set ::env(DIE_AREA) "0 0 440 440"
 set ::env(FP_SIZING) absolute
 
 # define number of IO pads
