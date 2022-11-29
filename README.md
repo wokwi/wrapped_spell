@@ -2,7 +2,7 @@
 
 SPELL is a minimalist, stack-based programming language developed for [The Skull CTF](https://skullctf.com).
 
-The language is defined by [a cryptic piece of Arduino code](https://skullctf.com/skull). 
+The language is defined by [a cryptic piece of Arduino code](https://skullctf.com/spell). 
 
 ![SPELL](docs/spell.png)
 
